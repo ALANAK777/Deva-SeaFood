@@ -18,21 +18,35 @@ async function pingSupabase() {
       process.exit(1);
     }
     
+    // Clean and validate the API key (remove any whitespace/invisible characters)
+    const cleanApiKey = supabaseKey.trim().replace(/[\r\n\t]/g, '');
+    const cleanUrl = supabaseUrl.trim();
+    
     console.log(`🏓 Pinging Supabase database at ${new Date().toISOString()}`);
+    console.log(`🔗 URL: ${cleanUrl}`);
+    console.log(`🔑 API Key length: ${cleanApiKey.length} characters`);
+    
+    // Validate API key format (should be a long alphanumeric string)
+    if (!/^[a-zA-Z0-9._-]+$/.test(cleanApiKey)) {
+      console.error('❌ API key contains invalid characters');
+      console.error('API key should only contain letters, numbers, dots, underscores, and hyphens');
+      process.exit(1);
+    }
     
     // Extract hostname from URL
-    const url = new URL(supabaseUrl);
+    const url = new URL(cleanUrl);
     const hostname = url.hostname;
     
     const options = {
       hostname: hostname,
       port: 443,
-      path: '/rest/v1/profiles?select=count&limit=1',
+      path: '/rest/v1/',  // Simple health check endpoint
       method: 'GET',
       headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json'
+        'apikey': cleanApiKey,
+        'Authorization': `Bearer ${cleanApiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'GitHub-Actions-Keep-Alive/1.0'
       },
       timeout: 10000 // 10 second timeout
     };
