@@ -47,7 +47,7 @@ jobs:
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           echo "🏓 Pinging Supabase database to keep it active..."
-          node database/github-actions-ping.js
+          node database/simple-ping.js
       
       - name: Report Status
         if: always()
