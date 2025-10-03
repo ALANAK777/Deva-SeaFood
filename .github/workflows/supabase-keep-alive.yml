@@ -30,17 +30,6 @@ jobs:
           # Only install minimal dependencies needed
           npm install --legacy-peer-deps
       
-      - name: Debug Environment Variables
-        env:
-          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
-          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
-        run: |
-          echo "🔍 Debugging environment variables..."
-          echo "EXPO_PUBLIC_SUPABASE_URL exists: $([[ -n "$EXPO_PUBLIC_SUPABASE_URL" ]] && echo "YES" || echo "NO")"
-          echo "EXPO_PUBLIC_SUPABASE_ANON_KEY exists: $([[ -n "$EXPO_PUBLIC_SUPABASE_ANON_KEY" ]] && echo "YES" || echo "NO")"
-          echo "URL starts with: ${EXPO_PUBLIC_SUPABASE_URL:0:20}..."
-          echo "Key starts with: ${EXPO_PUBLIC_SUPABASE_ANON_KEY:0:20}..."
-      
       - name: Ping Supabase Database
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
