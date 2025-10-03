@@ -1,0 +1,1 @@
+In the customer maangement page the revenue not yet displayed for the customer 

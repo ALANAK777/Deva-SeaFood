@@ -1,0 +1,49 @@
+name: Supabase Keep Alive
+
+# Keep Supabase database active to prevent pausing
+# Runs every 6 hours to ensure database stays active
+
+on:
+  schedule:
+    # Run every 6 hours (at 00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          npm ci --legacy-peer-deps
+      
+      - name: Ping Supabase Database
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🏓 Pinging Supabase database to keep it active..."
+          npm run db-ping
+          echo "✅ Keep-alive ping completed"
+      
+      - name: Report Status
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "🎉 Database keep-alive successful"
+          else
+            echo "❌ Database keep-alive failed"
+            exit 1
+          fi
