@@ -2,6 +2,7 @@ name: Supabase Keep Alive
 
 # Keep Supabase database active to prevent pausing
 # Runs every 6 hours to ensure database stays active
+# Note: This is a temporary workaround until migration to Express.js + Neon DB is complete
 
 on:
   schedule:
